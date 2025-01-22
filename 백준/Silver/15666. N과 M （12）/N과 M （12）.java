@@ -1,17 +1,17 @@
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Main {
 	private static Scanner sc = new Scanner(System.in);
-	private static int N,M;
+	private static int N, M;
 	private static int[] integer;
 	private static int[] selectedInteger;
 	private static StringBuilder sb = new StringBuilder();
-	
+
 	public static void main(String[] args) {
 		initializeProblem();
-		solve(0,-1);
+		solve(0, 0);
 		System.out.println(sb.toString());
 	}
 
@@ -19,31 +19,28 @@ public class Main {
 		N = sc.nextInt();
 		M = sc.nextInt();
 		sc.nextLine();
-		
-		Set<Integer> set = new HashSet<>();
-		for(int i =0;i<N;i++) {
+
+		Set<Integer> set = new TreeSet<>();
+		for (int i = 0; i < N; i++) {
 			set.add(sc.nextInt());
 		}
-		
-		integer = set.stream().mapToInt(Integer::valueOf).sorted().toArray();
+
+		integer = set.stream().mapToInt(Integer::intValue).toArray();
 		selectedInteger = new int[M];
 	}
-	
-	private static void solve(int depth, int prevNumber) {
-		if(depth == M) {
-			for(int item: selectedInteger) {
-				sb.append(String.format("%d ", item));
+
+	private static void solve(int depth, int startIdx) {
+		if (depth == M) {
+			for (int item : selectedInteger) {
+				sb.append(item).append(' ');
 			}
-			sb.append("\n");
-			return ;
+			sb.append('\n');
+			return;
 		}
-		
-		for(int i =0;i<integer.length; i++) {
-			if(prevNumber <= integer[i]) {
-				selectedInteger[depth] = integer[i];
-				solve(depth+1,integer[i]);
-				selectedInteger[depth] =0;
-			}
+
+		for (int i = startIdx; i < integer.length; i++) {
+			selectedInteger[depth] = integer[i];
+			solve(depth + 1, i); // 같은 숫자 중복 가능
 		}
 	}
 }
