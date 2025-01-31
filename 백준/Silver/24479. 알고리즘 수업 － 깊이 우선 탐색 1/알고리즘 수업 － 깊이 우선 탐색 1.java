@@ -14,13 +14,15 @@ public class Main {
 	private static List<List<Integer>> graph;
 	private static int[] visitedNodeTime;
 	private static int iter=1;
+	private static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		initializeProblem();
 		solve(startNode);
 		for(int e : visitedNodeTime) {
-			System.out.println(e);
+			sb.append(e).append("\n");
 		}
+		System.out.println(sb);
 	}
 
 	private static void initializeProblem() throws IOException {
