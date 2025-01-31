@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -31,7 +31,7 @@ public class Main {
 	private static int edgeCount;
 	private static Edge[] edges;
 	private static boolean[] visited;
-	private static Queue<Integer> queue = new LinkedList<>();
+	private static Queue<Integer> queue = new ArrayDeque<>();
 	private static int viruscount = -1;
 	
 	public static void main(String[] args) {
