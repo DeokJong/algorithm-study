@@ -2,22 +2,31 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int[] dr = { 0, 0, -1, 1, 0, 0 };
-    private static int[] dc = { 1, -1, 0, 0, 0, 0 };
-    private static int[] dd = { 0, 0, 0, 0, -1, 1 };
+    static int[] dr = {0, 0, -1, 1, 0, 0};
+    static int[] dc = {1, -1, 0, 0, 0, 0};
+    static int[] dd = {0, 0, 0, 0, -1, 1};
 
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static class Coord {
+        int d, r, c;
+        public Coord(int d, int r, int c) {
+            this.d = d;
+            this.r = r;
+            this.c = c;
+        }
+    }
 
-    private static Queue<int[]> arrTomatoQueue = new ArrayDeque<>();
-    private static int D, R, C;
-    private static int[][][] box;
-    private static int totalCnt; // 안 익은 토마토 개수
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    static Queue<Coord> queue = new ArrayDeque<>();
+    static int D, R, C;
+    static int[][][] box;
+    static int totalCnt;
 
     public static void main(String[] args) throws IOException {
         initializeProblem();
         int result = solve();
-        bw.write(String.valueOf(result));
+        bw.write(Integer.toString(result));
         bw.flush();
         br.close();
         bw.close();
@@ -40,7 +49,7 @@ public class Main {
                     if (box[d][r][c] == 0) {
                         totalCnt++;
                     } else if (box[d][r][c] == 1) {
-                        arrTomatoQueue.offer(new int[]{d, r, c});
+                        queue.offer(new Coord(d, r, c));
                     }
                 }
             }
@@ -52,11 +61,11 @@ public class Main {
 
         int days = -1;
 
-        while (!arrTomatoQueue.isEmpty()) {
-            int size = arrTomatoQueue.size();
+        while (!queue.isEmpty()) {
+            int size = queue.size();
             while (size-- > 0) {
-                int[] loc = arrTomatoQueue.poll();
-                int d = loc[0], r = loc[1], c = loc[2];
+                Coord loc = queue.poll();
+                int d = loc.d, r = loc.r, c = loc.c;
 
                 for (int i = 0; i < 6; i++) {
                     int nd = d + dd[i];
@@ -65,7 +74,7 @@ public class Main {
 
                     if (nd >= 0 && nd < D && nr >= 0 && nr < R && nc >= 0 && nc < C && box[nd][nr][nc] == 0) {
                         box[nd][nr][nc] = 1;
-                        arrTomatoQueue.offer(new int[]{nd, nr, nc});
+                        queue.offer(new Coord(nd, nr, nc));
                         totalCnt--;
                     }
                 }
