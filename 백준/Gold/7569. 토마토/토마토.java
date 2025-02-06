@@ -21,30 +21,14 @@ import java.util.stream.Stream;
  */
 
 public class Main {
-  public static class Location {
-    int r, c, d, second;
-
-    public Location(int d, int r, int c) {
-      this(d, r, c, 0);
-    }
-
-    public Location(int d, int r, int c, int second) {
-      this.r = r;
-      this.c = c;
-      this.d = d;
-      this.second = second;
-    }
-
-  }
-
   private static int[] dr = { 0, 0, -1, 1, 0, 0 };
   private static int[] dc = { 1, -1, 0, 0, 0, 0 };
   private static int[] dd = { 0, 0, 0, 0, -1, 1 };
   private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
   private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-  private static Queue<Location> tomatoQueue = new ArrayDeque<>();
-  private static Queue<Location> initUnRipeTomato = new ArrayDeque<>();
+  private static Queue<int[]> arrTomatoQueue = new ArrayDeque<>();
+  private static Queue<int[]> initUnripeTomatoQueue = new ArrayDeque<>();
   private static int D, R, C;
   private static int second;
   private static int[][][] box;
@@ -74,9 +58,9 @@ public class Main {
             box[d][r][c] = -1;
           } else if (inputs[c] == 1) {
             box[d][r][c] = 1;
-            tomatoQueue.add(new Location(d, r, c));
+            arrTomatoQueue.add(new int[]{d,r,c,0});
           } else {
-            initUnRipeTomato.add(new Location(d, r, c));
+            initUnripeTomatoQueue.add(new int[]{d,r,c});
           }
         }
       }
@@ -84,17 +68,17 @@ public class Main {
   }
 
   private static void sovle() {
-    while (!tomatoQueue.isEmpty()) {
-      if(tomatoQueue.peek().second != second) {
-        Location loc = tomatoQueue.poll();
-        
+    while (!arrTomatoQueue.isEmpty()) {
+      if(arrTomatoQueue.peek()[3] != second) {
+        int[] loc = arrTomatoQueue.poll();
+
         for(int d =0;d<6;d++) {
-          int nd = loc.d + dd[d];
-          int nr = loc.r + dr[d];
-          int nc = loc.c + dc[d];
-          if(isInBound(nd, nr, nc) && isRipe(nd, nr, nc)) {
+          int nd = loc[0] + dd[d];
+          int nr = loc[1] + dr[d];
+          int nc = loc[2] + dc[d];
+          if(isInBound(nd, nr, nc) && box[nd][nr][nc] == 0) {
             box[nd][nr][nc] = 1;
-            tomatoQueue.add(new Location(nd, nr, nc,loc.second+1));
+            arrTomatoQueue.add(new int[]{nd,nr,nc,loc[3]+1});
           }
         }
       } else {
@@ -102,9 +86,9 @@ public class Main {
       }
     }
 
-    while (!initUnRipeTomato.isEmpty()) {
-      Location loc = initUnRipeTomato.poll();
-      if(box[loc.d][loc.r][loc.c] == 0) {
+    while (!initUnripeTomatoQueue.isEmpty()) {
+      int[] loc = initUnripeTomatoQueue.poll();
+      if(box[loc[0]][loc[1]][loc[2]] == 0) {
         second = -1;
         return;
       }
@@ -113,8 +97,5 @@ public class Main {
 
   private static boolean isInBound(int d, int r, int c){
     return d>-1 && r> -1 && c>-1 && D>d && R>r && C>c;
-  }
-  private static boolean isRipe(int d,int r, int c) {
-    return box[d][r][c] == 0;
   }
 }
