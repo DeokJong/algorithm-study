@@ -20,7 +20,7 @@ public class Main {
 	private static Scanner sc = new Scanner(System.in);
 	private static int mapSize;
 	private static int[][] map;
-	private static boolean[][] visited;
+	private static int[][] dist;
 	private static PriorityQueue<Location> pq;
 	private static int[] dr = { 0, 0, -1, 1 };
 	private static int[] dc = { -1, 1, 0, 0 };
@@ -38,12 +38,13 @@ public class Main {
 
 	private static void initializeProblem() {
 		map = new int[mapSize][mapSize];
-		visited = new boolean[mapSize][mapSize];
+		dist = new int[mapSize][mapSize];
 		pq = new PriorityQueue<>();
 
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
 				map[i][j] = sc.nextInt();
+				dist[i][j] = Integer.MAX_VALUE;
 			}
 		}
 
@@ -57,10 +58,8 @@ public class Main {
 			int y = loc.y;
 			int cost = loc.rupee;
 
-			if (visited[x][y])
+			if (cost>dist[x][y])
 				continue;
-
-			visited[x][y] = true;
 
 			if (x == mapSize - 1 && y == mapSize - 1) {
 				return cost;
@@ -72,7 +71,10 @@ public class Main {
 
 				if (isInBound(nr, nc)) {
 					int nextCost = cost + map[nr][nc];
-					pq.add(new Location(nr, nc, nextCost));
+                    if (nextCost < dist[nr][nc]) {
+                        dist[nr][nc] = nextCost;
+                        pq.add(new Location(nr, nc, nextCost));
+                    }
 				}
 			}
 		}
@@ -80,6 +82,6 @@ public class Main {
 	}
 
 	private static boolean isInBound(int r, int c) {
-		return r >= 0 && c >= 0 && r < mapSize && c < mapSize && !visited[r][c];
+		return r >= 0 && c >= 0 && r < mapSize && c < mapSize;
 	}
 }
