@@ -19,31 +19,19 @@ public class Main {
   }
 
   private static void solve() {
-    int n = arr.length;
-    int[] dp = new int[n];
-    int[] prev = new int[n];
-
+    int[] dp = new int[arr.length];
+    int maxLength = 1;
     Arrays.fill(dp, 1);
-    Arrays.fill(prev, -1);
 
-    int maxLen = 1; 
-    int maxIndex = 0;
-    for (int i = 1; i < n; i++) {
-      for (int j = 0; j < i; j++) {
-        if (arr[j] < arr[i] && dp[i] < dp[j] + 1) {
-          dp[i] = dp[j] + 1;
-          prev[i] = j;
+    for(int i =1; i< arr.length; i++) {
+      for(int j = 0;j<i;j++) {
+        if(arr[i] > arr[j]) {
+          dp[i] = Math.max(dp[i], dp[j]+1);
         }
       }
-      if (dp[i] > maxLen) {
-        maxLen = dp[i];
-        maxIndex = i;
-      }
+      maxLength = Math.max(maxLength, dp[i]);
     }
-    
-    while (maxIndex != -1) {
-      maxIndex = prev[maxIndex];
-    }
-    System.out.println(maxLen);
+
+    System.out.println(maxLength);
   }
 }
