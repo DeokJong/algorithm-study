@@ -38,18 +38,23 @@ public class Main {
 	public static void solve() {
 		Arrays.fill(orderDp, 1);
 		Arrays.fill(unOrderDp, 1);
+		int orderMaxLength = 1;
+		int unOrderMaxLength = 1;
 		for(int i =1;i<length;i++) {
 			if(arr[i-1] <= arr[i]) {
 				orderDp[i] = orderDp[i-1]+1;
 			}
+			
+			orderMaxLength = Math.max(orderMaxLength, orderDp[i]);
 		}
 		
 		for(int i =1;i<length;i++) {
 			if(arr[i-1] >= arr[i]) {
 				unOrderDp[i] = unOrderDp[i-1]+1;
 			}
+			unOrderMaxLength= Math.max(unOrderMaxLength, unOrderDp[i]);
 		}
 		
-		maxLength = Math.max(Arrays.stream(orderDp).max().getAsInt(), Arrays.stream(unOrderDp).max().getAsInt());
+		maxLength = Math.max(orderMaxLength, unOrderMaxLength);
 	}
 }
