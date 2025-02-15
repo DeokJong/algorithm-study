@@ -3,33 +3,28 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-public class Main{
+public class Main {
 	private static Stack<String> stack = new Stack<>();
-	
+
 	public static void main(String[] args) throws IOException {
 		solve();
 	}
-	
+
 	private static void solve() throws IOException {
 		String[] inputs = (new BufferedReader(new InputStreamReader(System.in))).readLine().split("");
-		for(String input : inputs) {
-			if(stack.isEmpty()) {
-				stack.add(input);
-				continue ;
-			}
-			
-			if(stack.peek().equals(input)) {
+		for (String input : inputs) {
+			if (stack.isEmpty()) {
 				stack.add(input);
 				continue;
 			}
-			
-			if(input.equals(")")) {
+
+			if (!stack.peek().equals(input) && input.equals(")")) {
 				stack.pop();
-			} else {
-				stack.add(input);
+				continue;
 			}
-			
-			
+
+			stack.add(input);
+
 		}
 		System.out.println(stack.size());
 	}
