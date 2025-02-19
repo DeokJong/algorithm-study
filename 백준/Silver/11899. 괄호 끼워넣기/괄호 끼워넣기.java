@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 public class Main {
-	private static Stack<String> stack = new Stack<>();
-
+	private static Deque<String> stack = new ArrayDeque<>();
 	public static void main(String[] args) throws IOException {
 		solve();
 	}
@@ -14,7 +15,7 @@ public class Main {
 		String[] inputs = (new BufferedReader(new InputStreamReader(System.in))).readLine().split("");
 		for (String input : inputs) {
 			if (stack.isEmpty()) {
-				stack.add(input);
+				stack.push(input);
 				continue;
 			}
 
@@ -23,7 +24,7 @@ public class Main {
 				continue;
 			}
 
-			stack.add(input);
+			stack.push(input);
 
 		}
 		System.out.println(stack.size());
