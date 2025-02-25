@@ -8,6 +8,7 @@ public class Main {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		int count = Integer.parseInt(br.readLine());
 		int bit=0;
@@ -25,7 +26,7 @@ public class Main {
 				bit &= ~curbit;
 				break;
 			case "check":
-				bw.append(String.valueOf((bit & curbit) != 0 ? 1 : 0)).append('\n');
+				sb.append((bit & curbit) != 0 ? 1 : 0).append('\n');
 				break;
 			case "toggle":
 				bit ^= curbit;
@@ -38,7 +39,7 @@ public class Main {
 				break;
 			}
 		}
-		
+		bw.append(sb.toString());
 		bw.close();
 		br.close();
 	}
