@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+    
     static int iningCount;
     static int[][] playerOperates;
     static int[] batterOrder;
@@ -25,13 +25,13 @@ public class Main {
         br.close();
     }
     
-    // idx: 현재 배치할 타순 인덱스, masking: 사용한 선수 표시 (비트마스크)
+    // idx: 현재 타순 배치 인덱스, masking: 이미 배치한 선수 표시 (비트마스크)
     static void solve(int idx, int masking) {
         if (idx == 9) {
             simulateGame();
             return;
         }
-        if (idx == 3) { // 4번 타자는 이미 고정되어 있으므로 건너뛰기
+        if (idx == 3) { // 4번 타자는 이미 고정되어 있으므로 건너뜀
             solve(idx + 1, masking);
             return;
         }
@@ -43,50 +43,38 @@ public class Main {
         }
     }
     
-    // 게임 시뮬레이션 (switch-case를 사용하여 오버헤드 최소화)
+    // 게임 시뮬레이션: 베이스 상태를 정수(비트마스크)로 관리
     static void simulateGame() {
         int curInning = 0;
         int score = 0;
-        int curBatterIdx = 0;
         int outCount = 0;
-        // 베이스: 0번, 1번, 2번 인덱스는 각각 1루, 2루, 3루의 상태 (0: 빈 상태, 1: 주자 있음)
-        int[] base = new int[3];
+        int baseState = 0;  // 비트 0: 1루, 1: 2루, 2: 3루 (값 0이면 빈 베이스)
+        
+        int curBatterIdx = 0;
         
         while (curInning < iningCount) {
             int player = batterOrder[curBatterIdx];
             int result = playerOperates[curInning][player];
             
-            switch(result) {
-                case 0: // 아웃
-                    outCount++;
-                    if (outCount == 3) {
-                        outCount = 0;
-                        base[0] = base[1] = base[2] = 0;
-                        curInning++;
-                    }
-                    break;
-                case 1: // 안타: 모든 주자 한 베이스씩 진루
-                    score += base[2]; // 3루에 있던 주자는 득점
-                    base[2] = base[1];
-                    base[1] = base[0];
-                    base[0] = 1;
-                    break;
-                case 2: // 2루타: 모든 주자 2베이스씩 진루
-                    score += base[2] + base[1]; // 2루, 3루 주자는 득점
-                    base[2] = base[0]; // 1루 주자는 3루로 이동
-                    base[1] = 1;     // 타자는 2루에 위치
-                    base[0] = 0;
-                    break;
-                case 3: // 3루타: 모든 주자 득점
-                    score += base[2] + base[1] + base[0];
-                    base[2] = 1; // 타자 3루에 위치
-                    base[1] = 0;
-                    base[0] = 0;
-                    break;
-                case 4: // 홈런: 모든 주자와 타자 득점
-                    score += base[2] + base[1] + base[0] + 1;
-                    base[0] = base[1] = base[2] = 0;
-                    break;
+            if (result == 0) { // 아웃
+                outCount++;
+                if (outCount == 3) {
+                    outCount = 0;
+                    baseState = 0;
+                    curInning++;
+                }
+            } else if (result >= 1 && result <= 3) { // 안타, 2루타, 3루타
+                // 기존 주자들이 result만큼 진루: baseState를 왼쪽으로 result비트 시프트
+                int shifted = baseState << result;
+                // 3루를 넘어간 주자들은 득점
+                score += Integer.bitCount(shifted & (~7));
+                // 3루 이하의 비트만 남김
+                baseState = shifted & 7;
+                // 타자: result에 따라 해당 베이스(1루:result=1, 2루:result=2, 3루:result=3)에 배치
+                baseState |= (1 << (result - 1));
+            } else if (result == 4) { // 홈런: 모든 주자와 타자 득점
+                score += Integer.bitCount(baseState) + 1;
+                baseState = 0;
             }
             
             curBatterIdx = (curBatterIdx + 1) % 9;
