@@ -5,41 +5,35 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class Main {
-	private static int bit;
-	private static final String ADD = "add";
-	private static final String REMOVE = "remove";
-	private static final String CHECK = "check";
-	private static final String TOGGLE = "toggle";
-	private static final String ALL = "all";
-	private static final String EMPTY = "empty";
-	private static final int MAX_IDX = 20;
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		int count = Integer.parseInt(br.readLine());
+		int bit=0;
+		int MAX_IDX = 20;
 		for (int i = 0; i < count; i++) {
 			String[] inputs = br.readLine().trim().split(" ");
 			String command = inputs[0];
 			int curbit = inputs.length > 1 ? 1 << Integer.parseInt(inputs[1]) : 0;
 
 			switch (command) {
-			case ADD:
+			case "add":
 				bit |= curbit;
 				break;
-			case REMOVE:
+			case "remove":
 				bit &= ~curbit;
 				break;
-			case CHECK:
+			case "check":
 				bw.append(String.valueOf((bit & curbit) != 0 ? 1 : 0)).append('\n');
 				break;
-			case TOGGLE:
+			case "toggle":
 				bit ^= curbit;
 				break;
-			case ALL:
+			case "all":
 				bit = (1<<MAX_IDX+1)-1;
 				break;
-			case EMPTY:
+			case "empty":
 				bit = 0;
 				break;
 			}
