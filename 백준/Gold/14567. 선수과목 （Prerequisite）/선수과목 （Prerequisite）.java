@@ -1,7 +1,5 @@
 import static java.lang.Integer.parseInt;
-
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
@@ -16,7 +14,7 @@ public class Main {
 	private static int[] remainCount;
 	private static int[] lectureSemester;
 	// 0: 후수과목 번호 ; 1: 선수과목을 들은 학기
-	private static Queue<int[]> que;
+	private static Deque<int[]> que; // Queue -> Deque로 변경
 
 	public static void main(String[] args) throws IOException {
 		initializeProblem();
@@ -50,10 +48,10 @@ public class Main {
 		Arrays.fill(lectureSemester, 1);
 
 		que = new ArrayDeque<>();		
-		for(int i =0;i<vertexCount;i++) {
+		for(int i = 0; i < vertexCount; i++) {
 			if(remainCount[i] == 0){
 				for(int post : graph.get(i)) {
-					que.add(new int[] {post,1});
+					que.addLast(new int[] {post, 1}); // add() -> addLast()
 				}
 			}
 		}
@@ -61,16 +59,16 @@ public class Main {
 
 	private static void solve() throws IOException {
 		while(!que.isEmpty()) {
-			int[] info = que.poll();
+			int[] info = que.pollFirst(); // poll() -> pollFirst()
 			int postLectureNumber = info[0];
-			int preLectureSemester= info[1];
+			int preLectureSemester = info[1];
 			
 			remainCount[postLectureNumber]--;
-			lectureSemester[postLectureNumber] = Math.max(lectureSemester[postLectureNumber], preLectureSemester+1);
+			lectureSemester[postLectureNumber] = Math.max(lectureSemester[postLectureNumber], preLectureSemester + 1);
 			
 			if(remainCount[postLectureNumber] == 0) {
 				for(int post : graph.get(postLectureNumber)) {
-					que.add(new int[] {post,lectureSemester[postLectureNumber]});
+					que.addLast(new int[] {post, lectureSemester[postLectureNumber]}); // add() -> addLast()
 				}
 			}
 		}
