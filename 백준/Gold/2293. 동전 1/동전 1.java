@@ -25,7 +25,6 @@ public class Main {
 		for (int i = 0; i < coinCount; i++) {
 			coins[i] = parseInt(br.readLine());
 		}
-		Arrays.sort(coins);
 
 		dp = new int[target + 1];
 		dp[0] = 1;
