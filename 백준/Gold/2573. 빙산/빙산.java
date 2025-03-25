@@ -49,23 +49,19 @@ public class Main {
 		}
 	}
 
-  private static int solve() {
-    int time=0;
-    for (;;time++) {
+	private static int solve() {
 
-        if (que.isEmpty()) {
-            return 0;
-        }
-        Location l = que.peek();
-        int r = l.r;
-        int c = l.c;
-        if (BFS(r, c) != que.size()) {
-            return time;
-        }
-        melt();
-    }
+		while (true) {
+			if (que.isEmpty()) {
+				return 0;
+			}
 
-}
+			if (BFS(que.peek().r, que.peek().c) != que.size()) {
+				return que.peek().time;
+			}
+			melt();
+		}
+	}
 
 	private static void melt() {
 		if (que.isEmpty()) {
@@ -74,7 +70,7 @@ public class Main {
 
 		int curTime = que.peek().time;
 		Deque<Location> updateQue = new ArrayDeque<Main.Location>();
-		while (!que.isEmpty()&&que.peek().time == curTime) {
+		while (!que.isEmpty() && que.peek().time == curTime) {
 			Location l = que.poll();
 			int size = l.size;
 
@@ -86,7 +82,7 @@ public class Main {
 					size--;
 				}
 			}
-			
+
 			l.time += 1;
 			l.size = size;
 			if (size > 0) {
@@ -104,7 +100,7 @@ public class Main {
 
 			map[r][c] = size <= 0 ? 0 : size;
 		}
-		
+
 //		for(int[] r : map) {
 //			for(int c : r) {
 //				System.out.printf("%d ",c);
@@ -112,7 +108,7 @@ public class Main {
 //			System.out.println();
 //		}
 //		System.out.println();
-		
+
 	}
 
 	private static int BFS(int r, int c) {
